@@ -1,0 +1,13 @@
+source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
+
+target 'SSSnackbar_Example', :exclusive => true do
+  pod "SSSnackbar", :path => "../"
+end
+
+target 'SSSnackbar_Tests', :exclusive => true do
+  pod "SSSnackbar", :path => "../"
+
+  pod 'Specta'
+  pod 'Expecta'
+end
