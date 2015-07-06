@@ -1,0 +1,6 @@
+framework module SSSnackbar {
+  umbrella header "Pods-SSSnackbar_Example-SSSnackbar-umbrella.h"
+
+  export *
+  module * { export * }
+}

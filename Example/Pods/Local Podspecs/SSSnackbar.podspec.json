@@ -1,0 +1,26 @@
+{
+  "name": "SSSnackbar",
+  "version": "0.1.0",
+  "summary": "A short description of SSSnackbar.",
+  "description": "                       An optional longer description of SSSnackbar\n\n                       * Markdown format.\n                       * Don't worry about the indent, we strip it!\n",
+  "homepage": "https://github.com/<GITHUB_USERNAME>/SSSnackbar",
+  "license": "MIT",
+  "authors": {
+    "Sam Stone": "stonesam92@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/<GITHUB_USERNAME>/SSSnackbar.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "7.0"
+  },
+  "requires_arc": true,
+  "source_files": "Pod/Classes/**/*",
+  "resource_bundles": {
+    "SSSnackbar": [
+      "Pod/Assets/*.png"
+    ]
+  },
+  "public_header_files": "Pod/Classes/**/*.h"
+}

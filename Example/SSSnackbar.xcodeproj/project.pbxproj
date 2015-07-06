@@ -9,13 +9,13 @@
 /* Begin PBXBuildFile section */
 		0CE253B309005EC1FBDB4BA5 /* Pods_SSSnackbar_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CB728DB2ED19F9AD4AA0E3A /* Pods_SSSnackbar_Example.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		16736D309700FDBB04892E57 /* Pods_SSSnackbar_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D90CCF0FF4F2F015142B00 /* Pods_SSSnackbar_Tests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		22B4F4251B498FD800D8532E /* SSTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B4F4241B498FD800D8532E /* SSTableViewController.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F598195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
 		6003F59A195388D20070C39A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
 		6003F59E195388D20070C39A /* SSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F59D195388D20070C39A /* SSAppDelegate.m */; };
-		6003F5A7195388D20070C39A /* SSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5A6195388D20070C39A /* SSViewController.m */; };
 		6003F5A9195388D20070C39A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
 		6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -37,11 +37,13 @@
 
 /* Begin PBXFileReference section */
 		1B5DF05EB00CCEB8CC9F02AD /* Pods-SSSnackbar_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSSnackbar_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-SSSnackbar_Example/Pods-SSSnackbar_Example.release.xcconfig"; sourceTree = "<group>"; };
+		22B4F4231B498FD800D8532E /* SSTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTableViewController.h; sourceTree = "<group>"; };
+		22B4F4241B498FD800D8532E /* SSTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSTableViewController.m; sourceTree = "<group>"; };
 		292D186C768E3584835A088A /* Pods-SSSnackbar_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSSnackbar_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SSSnackbar_Tests/Pods-SSSnackbar_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		2CB728DB2ED19F9AD4AA0E3A /* Pods_SSSnackbar_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SSSnackbar_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3056F4226238C34DD3AE1D55 /* Pods-SSSnackbar_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSSnackbar_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SSSnackbar_Tests/Pods-SSSnackbar_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		4002C96AE03DFA13F83F41E7 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		6003F58A195388D20070C39A /* SSSnackbar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = SSSnackbar.app; path = SSSnackbar_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6003F58A195388D20070C39A /* SSSnackbar_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SSSnackbar_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6003F591195388D20070C39A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -51,10 +53,8 @@
 		6003F59B195388D20070C39A /* SSSnackbar-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SSSnackbar-Prefix.pch"; sourceTree = "<group>"; };
 		6003F59C195388D20070C39A /* SSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSAppDelegate.h; sourceTree = "<group>"; };
 		6003F59D195388D20070C39A /* SSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSAppDelegate.m; sourceTree = "<group>"; };
-		6003F5A5195388D20070C39A /* SSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSViewController.h; sourceTree = "<group>"; };
-		6003F5A6195388D20070C39A /* SSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSViewController.m; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		6003F5AE195388D20070C39A /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = Tests.xctest; path = SSSnackbar_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6003F5AE195388D20070C39A /* SSSnackbar_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SSSnackbar_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6003F5B7195388D20070C39A /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -119,8 +119,8 @@
 		6003F58B195388D20070C39A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6003F58A195388D20070C39A /* SSSnackbar.app */,
-				6003F5AE195388D20070C39A /* Tests.xctest */,
+				6003F58A195388D20070C39A /* SSSnackbar_Example.app */,
+				6003F5AE195388D20070C39A /* SSSnackbar_Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -144,8 +144,8 @@
 				6003F59C195388D20070C39A /* SSAppDelegate.h */,
 				6003F59D195388D20070C39A /* SSAppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
-				6003F5A5195388D20070C39A /* SSViewController.h */,
-				6003F5A6195388D20070C39A /* SSViewController.m */,
+				22B4F4231B498FD800D8532E /* SSTableViewController.h */,
+				22B4F4241B498FD800D8532E /* SSTableViewController.m */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
 			);
@@ -213,7 +213,7 @@
 			);
 			name = SSSnackbar_Example;
 			productName = SSSnackbar;
-			productReference = 6003F58A195388D20070C39A /* SSSnackbar.app */;
+			productReference = 6003F58A195388D20070C39A /* SSSnackbar_Example.app */;
 			productType = "com.apple.product-type.application";
 		};
 		6003F5AD195388D20070C39A /* SSSnackbar_Tests */ = {
@@ -234,7 +234,7 @@
 			);
 			name = SSSnackbar_Tests;
 			productName = SSSnackbarTests;
-			productReference = 6003F5AE195388D20070C39A /* Tests.xctest */;
+			productReference = 6003F5AE195388D20070C39A /* SSSnackbar_Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -391,8 +391,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F59E195388D20070C39A /* SSAppDelegate.m in Sources */,
-				6003F5A7195388D20070C39A /* SSViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				22B4F4251B498FD800D8532E /* SSTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
