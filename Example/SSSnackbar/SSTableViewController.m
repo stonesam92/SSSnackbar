@@ -10,16 +10,16 @@
 #import <SSSnackbar/SSSnackbar.h>
 
 @interface SSTableViewController ()
-@property (strong, nonatomic) NSMutableArray *tableViewContents;
-@property (strong, nonatomic) NSString *lastRemovedElement;
-@property (assign, nonatomic) NSInteger lastRemovedIndex;
+@property (strong, nonatomic) NSMutableArray *normalExampleContents;
+@property (strong, nonatomic) NSMutableArray *longRunningExampleContents;
 @end
 
 @implementation SSTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _tableViewContents = [@[@"Apples", @"Pears", @"Milk", @"Lemonade", @"Beef", @"Chicken"] mutableCopy];
+    _normalExampleContents = [@[@"Apples", @"Pears", @"Milk"] mutableCopy];
+    _longRunningExampleContents = [@[@"Lemonade", @"Beef", @"Chicken"] mutableCopy];
     
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     [self setTitle:@"Shopping List"];
@@ -33,16 +33,30 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == 0)
+        return @"Normal Examples";
+    else
+        return @"Long-Running Action Examples";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.tableViewContents.count;
+    if (section == 0)
+        return self.normalExampleContents.count;
+    else
+        return self.longRunningExampleContents.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"item" forIndexPath:indexPath];
-    cell.textLabel.text = self.tableViewContents[indexPath.row];
+    if (indexPath.section == 0) {
+        cell.textLabel.text = self.normalExampleContents[indexPath.row];
+    } else {
+        cell.textLabel.text = self.longRunningExampleContents[indexPath.row];
+    }
     return cell;
 }
 
@@ -53,25 +67,61 @@
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSInteger row = indexPath.row;
-        self.lastRemovedIndex = row;
-        self.lastRemovedElement = self.tableViewContents[row];
-        [self.tableViewContents removeObjectAtIndex:row];
+        SSSnackbar *snackbar;
+        
+        if (indexPath.section == 1) {
+            NSString *removedItem = self.longRunningExampleContents[indexPath.row];
+            [self.longRunningExampleContents removeObjectAtIndex:indexPath.row];
+            snackbar = [self snackbarForLongRunningItem:removedItem atIndexPath:indexPath];
+        } else {
+            NSString *removedItem = self.normalExampleContents[indexPath.row];
+            [self.normalExampleContents removeObjectAtIndex:indexPath.row];
+            snackbar = [self snackbarForQuickRunningItem:removedItem atIndexPath:indexPath];
+        }
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        NSString *snackbarMessage = [NSString stringWithFormat:@"You removed %@.", self.lastRemovedElement];
-        SSSnackbar *snackbar = [[SSSnackbar alloc] initWithMessage:snackbarMessage
-                                                        actionText:@"Undo"
-                                                          duration:5
-                                                       actionBlock:^(SSSnackbar *sender) {
-                                                           [self.tableViewContents insertObject:self.lastRemovedElement
-                                                                                        atIndex:self.lastRemovedIndex];
-                                                           [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.lastRemovedIndex inSection:0]]
-                                                                            withRowAnimation:UITableViewRowAnimationFade];
-                                                           
-                                                       }
-                                                    dismissalBlock:nil];
         [snackbar show];
     }
+}
+
+- (SSSnackbar *)snackbarForLongRunningItem:(NSString *)item atIndexPath:(NSIndexPath *)indexPath {
+    NSString *snackbarMessage = [NSString stringWithFormat:@"You removed %@.", item];
+    
+    SSSnackbar *snackbar = [SSSnackbar snackbarWithMessage:snackbarMessage
+                                                actionText:@"Undo"
+                                                  duration:5
+                                               actionBlock:^(SSSnackbar *sender){
+                                                   //waste some time
+                                                   sleep(2);
+                                                   //must update the UI and dismiss the snackbar from main thread
+                                                   //long running action blocks get run on background thread.
+                                                   dispatch_sync(dispatch_get_main_queue(), ^{
+                                                       [self.longRunningExampleContents insertObject:item
+                                                                                    atIndex:indexPath.row];
+                                                       [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                                                        withRowAnimation:UITableViewRowAnimationFade];
+                                                       [sender dismiss];
+                                                   });
+                                               }
+                                            dismissalBlock:nil];
+    snackbar.actionIsLongRunning = YES;
+    return snackbar;
+}
+
+- (SSSnackbar *)snackbarForQuickRunningItem:(NSString *)item atIndexPath:(NSIndexPath *)indexPath {
+    NSString *snackbarMessage = [NSString stringWithFormat:@"You removed %@.", item];
+    
+    SSSnackbar *snackbar = [SSSnackbar snackbarWithMessage:snackbarMessage
+                                                actionText:@"Undo"
+                                                  duration:5
+                                               actionBlock:^(SSSnackbar *sender){
+                                                   [self.normalExampleContents insertObject:item
+                                                                                atIndex:indexPath.row];
+                                                   [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                                                    withRowAnimation:UITableViewRowAnimationFade];
+                                               }
+                                            dismissalBlock:nil];
+    return snackbar;
 }
 
 @end
