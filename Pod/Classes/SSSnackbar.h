@@ -52,11 +52,31 @@ IB_DESIGNABLE
                     actionBlock:(void (^)(SSSnackbar *sender))actionBlock
                  dismissalBlock:(void (^)(SSSnackbar *sender))dismissalBlock;
 /**
+ *  Convenience constructor
+ *
+ *  @param message        The message displayed on the snackbars's text label.
+ *  @param actionText     The text displayed on the snackbar's action button.
+ *  @param duration       The duration of time for which the snackbar should remain on the screen.
+ *  @param actionBlock    A block to be called when the user presses the action button.
+ *  @param dismissalBlock A block to be called when the snackbar is removed from the screen by any means other than the user having pressed the action button. Can be nil.
+ */
++ (instancetype)snackbarWithMessage:(NSString *)message
+                         actionText:(NSString *)actionText
+                           duration:(NSTimeInterval)duration
+                        actionBlock:(void (^)(SSSnackbar *sender))actionBlock
+                     dismissalBlock:(void (^)(SSSnackbar *sender))dismissalBlock;
+/**
  *  Presents the snackbar to the user for the configured duration of time.
  */
 - (void)show;
 /**
- *  Removes the snackbar from the screen. Calls the snackbar's dismissal block if one exists, unless the snackbar has its isLongRunning property set to YES and it action button has already been pressed by the user.
+ *  Removes the snackbar from the screen. Calls the snackbar's dismissal block if one exists, unless the snackbar has its isLongRunning property set to YES and it action button has already been pressed by the user. This message is shorthand for calling dismissAnimated with YES as the argument.
  */
 - (void)dismiss;
+/**
+ *  Removes the snackbar from the screen. Calls the snackbar's dismissal block if one exists, unless the snackbar has its isLongRunning property set to YES and it action button has already been pressed by the user.
+ *
+ *  @param animated Determines whether the snackbars's removal from the screen is animated or not.
+ */
+- (void)dismissAnimated:(BOOL)animated;
 @end
