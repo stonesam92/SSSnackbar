@@ -10,22 +10,21 @@
 Pod::Spec.new do |s|
   s.name             = "SSSnackbar"
   s.version          = "1.0.0"
-  s.summary          = "An iOS implementation of the Snackbar concept, as extensively in Android as well as some Google iOS apps such as GMail"
+  s.summary          = "An iOS implementation of the Snackbar concept, as used extensively in Android as well as some Google iOS apps such as GMail"
   s.description      = <<-DESC
                         A snackbar is a way to display an actionable alert to the user.
 
-                        A common example usage is to allow the user a 5-10 second period to undo the deletion of some data.
+                        A common example usage is to provide the user with a 5-10 second grace period during which they can undo some change they have performed, such as deleting or achiving some data.
 
                         Snackbars are used extensively in recent versions of Android and Google's iOS apps.
 
-                        This imitation mimicks Snackbars as they are presented in the iOS Gmail app.
                        DESC
   s.homepage         = "https://github.com/stonesam92/SSSnackbar"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
+  # s.screenshots     = "http://i.imgur.com/Z5QWAJW.jpg", "http://i.imgur.com/bud0MB4.jpg"
   s.license          = 'MIT'
   s.author           = { "Sam Stone" => "stonesam92@gmail.com" }
   s.source           = { :git => "https://github.com/stonesam92/SSSnackbar.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.social_media_url = 'https://twitter.com/CmdShiftN'
 
   s.platform     = :ios, '7.0'
   s.requires_arc = true
