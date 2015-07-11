@@ -26,17 +26,33 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
 
 @implementation SSSnackbar
 
++ (instancetype)snackbarWithMessage:(NSString *)message
+                         actionText:(NSString *)actionText
+                           duration:(NSTimeInterval)duration
+                        actionBlock:(void (^)(SSSnackbar *sender))actionBlock
+                     dismissalBlock:(void (^)(SSSnackbar *sender))dismissalBlock {
+    
+    SSSnackbar *snackbar = [[SSSnackbar alloc] initWithMessage:message
+                                                    actionText:actionText
+                                                      duration:duration
+                                                   actionBlock:actionBlock
+                                                dismissalBlock:dismissalBlock];
+    
+    return snackbar;
+}
+
 - (instancetype)initWithMessage:(NSString *)message
                      actionText:(NSString *)actionText
                        duration:(NSTimeInterval)duration
                     actionBlock:(void (^)(SSSnackbar *sender))actionBlock
                  dismissalBlock:(void (^)(SSSnackbar *sender))dismissalBlock {
+    
     if (self = [super initWithFrame:CGRectMake(0, 0, 0, 0)]) {
+        self.translatesAutoresizingMaskIntoConstraints = NO;
         _actionBlock = actionBlock;
         _dismissalBlock = dismissalBlock;
         _duration = duration;
         
-        self.translatesAutoresizingMaskIntoConstraints = NO;
         _messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
         _messageLabel.text = message;
         _messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -45,14 +61,14 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
         [_messageLabel sizeToFit];
         
         _actionButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_actionButton setTitle:actionText forState:UIControlStateNormal];
+        _actionButton.translatesAutoresizingMaskIntoConstraints = NO;
         _actionButton.titleLabel.font = [UIFont systemFontOfSize:14.0 weight:UIFontWeightBold];
+        [_actionButton setTitle:actionText forState:UIControlStateNormal];
         [_actionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_actionButton sizeToFit];
         [_actionButton addTarget:self
                           action:@selector(executeAction:)
                 forControlEvents:UIControlEventTouchUpInside];
-        [_actionButton sizeToFit];
-        _actionButton.translatesAutoresizingMaskIntoConstraints = NO;
         
         _separator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
         _separator.backgroundColor = [UIColor colorWithWhite:0.99 alpha:.1];
@@ -62,9 +78,7 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
         [self addSubview:_actionButton];
         [self addSubview:_separator];
         
-        self.backgroundColor = [UIColor clearColor];
-        
-        
+        self.opaque = NO;
     }
     
     return self;
@@ -78,9 +92,11 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);
+    
     [[UIColor colorWithWhite:0.1 alpha:0.9] setFill];
     UIBezierPath *clippath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:3];
     [clippath fill];
+    
     CGContextRestoreGState(ctx);
 }
 
@@ -91,7 +107,7 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
     
     if (shouldReplaceExistingSnackbar) {
         [currentlyVisibleSnackbar invalidateTimer];
-        [currentlyVisibleSnackbar _dismissCallingDismissalBlock:YES animated:NO];
+        [currentlyVisibleSnackbar dismissAnimated:NO];
     }
     
     [superview addSubview:self];
@@ -114,7 +130,7 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
     }
     self.dismissalTimer = [NSTimer scheduledTimerWithTimeInterval:self.duration
                                                            target:self
-                                                         selector:@selector(dismissalTimer)
+                                                         selector:@selector(timeoutForDismissal:)
                                                          userInfo:nil
                                                           repeats:NO];
     currentlyVisibleSnackbar = self;
@@ -133,18 +149,25 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
 
 - (void)timeoutForDismissal:(NSTimer *)sender {
     [self invalidateTimer];
-    [self _dismissCallingDismissalBlock:YES animated:YES];
+    [self dismissAnimated:YES];
 }
-- (void)_dismissCallingDismissalBlock:(BOOL)callDismissalBlock animated:(BOOL)animated {
+
+- (void)dismiss {
+    [self dismissAnimated:YES];
+}
+
+- (void)dismissAnimated:(BOOL)animated {
     [self.superview removeConstraints:self.visibleVerticalLayoutConstraints];
     [self.superview addConstraints:self.hiddenVerticalLayoutConstraints];
     currentlyVisibleSnackbar = nil;
     
     if (!animated) {
-        if (callDismissalBlock)
+        if (!self.actionBlockDispatched)
             [self executeDismissalBlock];
         [self removeFromSuperview];
-    } else {
+    }
+    
+    else {
         [UIView animateWithDuration:0.2
                               delay:0
                             options:UIViewAnimationOptionCurveEaseIn
@@ -152,17 +175,11 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
                              [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
-                             if (callDismissalBlock)
+                             if (!self.actionBlockDispatched)
                                  [self executeDismissalBlock];
                              [self removeFromSuperview];
                          }];
     }
-}
-
-- (void)dismiss {
-    [self invalidateTimer];
-    if (!self.actionBlockDispatched)
-        [self _dismissCallingDismissalBlock:YES animated:YES];
 }
 
 - (IBAction)executeAction:(id)sender {
@@ -192,24 +209,24 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
         [indicator startAnimating];
         self.actionBlockDispatched = YES;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            if (self.actionBlock)
-                self.actionBlock(self);
+            [self executeActionBlock];
         });
     } else {
         [self executeActionBlock];
-        [self _dismissCallingDismissalBlock:NO animated:YES];
+        [self dismissAnimated:YES];
     }
 
 }
 
 - (void)executeDismissalBlock {
-    if (self.dismissalBlock)
+    if (self.dismissalBlock && !self.actionBlockDispatched)
         self.dismissalBlock(self);
 }
 
 - (void)executeActionBlock {
     if (self.actionBlock)
         self.actionBlock(self);
+    self.actionBlockDispatched = YES;
 }
 
 - (NSArray *)hiddenVerticalLayoutConstraints {
@@ -256,6 +273,8 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
     self.dismissalTimer = nil;
 }
 
+// This must be called after the snackbar is added to a view
+// Otherwise 
 - (void)setupContentLayout {
     NSMutableArray *constraints = [NSMutableArray new];
     [constraints addObjectsFromArray:
