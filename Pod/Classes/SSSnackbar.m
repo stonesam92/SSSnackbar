@@ -20,6 +20,8 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
 @property (strong, nonatomic) NSArray *hiddenVerticalLayoutConstraints;
 @property (strong, nonatomic) NSArray *visibleVerticalLayoutConstraints;
 @property (strong, nonatomic) NSArray *horizontalLayoutConstraints;
+
+@property (assign, nonatomic) BOOL actionBlockDispatched;
 @end
 
 @implementation SSSnackbar
@@ -159,12 +161,13 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
 
 - (void)dismiss {
     [self invalidateTimer];
-    [self _dismissCallingDismissalBlock:YES animated:YES];
+    if (!self.actionBlockDispatched)
+        [self _dismissCallingDismissalBlock:YES animated:YES];
 }
 
 - (IBAction)executeAction:(id)sender {
     [self invalidateTimer];
-    if (self.shouldShowActivityIndictatorDuringAction) {
+    if (self.actionIsLongRunning) {
         UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         indicator.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:indicator];
@@ -187,10 +190,15 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
         
         [self.actionButton setHidden:YES];
         [indicator startAnimating];
+        self.actionBlockDispatched = YES;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if (self.actionBlock)
+                self.actionBlock(self);
+        });
+    } else {
+        [self executeActionBlock];
+        [self _dismissCallingDismissalBlock:NO animated:YES];
     }
-    
-    [self executeActionBlock];
-    [self _dismissCallingDismissalBlock:NO animated:YES];
 
 }
 
