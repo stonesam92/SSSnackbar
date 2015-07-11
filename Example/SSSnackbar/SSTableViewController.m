@@ -92,7 +92,7 @@
                                                   duration:5
                                                actionBlock:^(SSSnackbar *sender){
                                                    //waste some time
-                                                   sleep(2);
+                                                   sleep(3);
                                                    //must update the UI and dismiss the snackbar from main thread
                                                    //long running action blocks get run on background thread.
                                                    dispatch_sync(dispatch_get_main_queue(), ^{
@@ -100,7 +100,6 @@
                                                                                     atIndex:indexPath.row];
                                                        [self.tableView insertRowsAtIndexPaths:@[indexPath]
                                                                         withRowAnimation:UITableViewRowAnimationFade];
-                                                       [sender dismiss];
                                                    });
                                                }
                                             dismissalBlock:nil];

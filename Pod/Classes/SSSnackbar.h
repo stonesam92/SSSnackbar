@@ -16,10 +16,6 @@ IB_DESIGNABLE
 @property (assign, nonatomic) NSTimeInterval duration;
 /**
  *  If this value is set to YES, then the action block is not executed on the main thread to avoid blocking the UI. Instead, it is executed asynchronously on a background queue. 
- *
- *   Because of this, the snackbar will not be automatically dismissed when the action block completes. Instead, the action block must explicitly send the snackbar the dismiss message. 
- 
- *   The dismissal block is NOT called when the dismiss message is sent from the action block.
  */
 @property (assign, nonatomic) BOOL actionIsLongRunning;
 /**

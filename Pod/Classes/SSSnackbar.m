@@ -148,7 +148,6 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
 }
 
 - (void)timeoutForDismissal:(NSTimer *)sender {
-    [self invalidateTimer];
     [self dismissAnimated:YES];
 }
 
@@ -157,6 +156,7 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
 }
 
 - (void)dismissAnimated:(BOOL)animated {
+    [self invalidateTimer];
     [self.superview removeConstraints:self.visibleVerticalLayoutConstraints];
     [self.superview addConstraints:self.hiddenVerticalLayoutConstraints];
     currentlyVisibleSnackbar = nil;
@@ -210,6 +210,8 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
         self.actionBlockDispatched = YES;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self executeActionBlock];
+            //dismiss self on main thread once action block complete
+            [self performSelectorOnMainThread:@selector(dismiss) withObject:nil waitUntilDone:NO];
         });
     } else {
         [self executeActionBlock];
@@ -224,9 +226,10 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
 }
 
 - (void)executeActionBlock {
+    self.actionBlockDispatched = YES;
+    
     if (self.actionBlock)
         self.actionBlock(self);
-    self.actionBlockDispatched = YES;
 }
 
 - (NSArray *)hiddenVerticalLayoutConstraints {
