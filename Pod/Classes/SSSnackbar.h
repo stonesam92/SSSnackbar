@@ -9,17 +9,16 @@
 #import <UIKit/UIKit.h>
 
 IB_DESIGNABLE
-@interface SSSnackBar : UIView
-@property (nonatomic) IBInspectable CGFloat cornerRadius;
+@interface SSSnackbar : UIView
 @property (assign, nonatomic) NSTimeInterval duration;
 @property (assign, nonatomic) BOOL shouldShowActivityIndictatorDuringAction;
-@property (strong, nonatomic) void (^actionHandler)(SSSnackBar *sender);
-@property (strong, nonatomic) void (^dismissalHandler)(SSSnackBar *sender);
+@property (strong, nonatomic) void (^actionBlock)(SSSnackbar *sender);
+@property (strong, nonatomic) void (^dismissalBlock)(SSSnackbar *sender);
 - (instancetype)initWithMessage:(NSString *)message
                      actionText:(NSString *)actionText
                        duration:(NSTimeInterval)duration
-                    actionBlock:(void (^)(SSSnackBar *sender))actionBlock
-                 dismissalBlock:(void (^)(SSSnackBar *sender))dismissalBlock;
+                    actionBlock:(void (^)(SSSnackbar *sender))actionBlock
+                 dismissalBlock:(void (^)(SSSnackbar *sender))dismissalBlock;
 - (void)show;
 - (void)dismiss;
 @end

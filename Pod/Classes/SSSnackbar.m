@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Sam Stone. All rights reserved.
 //
 
-#import "SSSnackBar.h"
+#import "SSSnackbar.h"
 //#import "SSSeparatorView.h"
 
-static SSSnackBar *currentlyVisibleSnackbar = nil;
+static SSSnackbar *currentlyVisibleSnackbar = nil;
 
-@interface SSSnackBar ()
+@interface SSSnackbar ()
 @property (strong, nonatomic) UILabel *messageLabel;
 @property (strong, nonatomic) UIButton *actionButton;
 @property (strong, nonatomic) UIView *separator;
@@ -22,17 +22,16 @@ static SSSnackBar *currentlyVisibleSnackbar = nil;
 @property (strong, nonatomic) NSArray *horizontalLayoutConstraints;
 @end
 
-@implementation SSSnackBar
+@implementation SSSnackbar
 
 - (instancetype)initWithMessage:(NSString *)message
                      actionText:(NSString *)actionText
                        duration:(NSTimeInterval)duration
-                    actionBlock:(void (^)(SSSnackBar *sender))actionBlock
-                 dismissalBlock:(void (^)(SSSnackBar *sender))dismissalBlock {
-//    CGSize windowSize = [UIApplication sharedApplication].keyWindow.frame.size;
+                    actionBlock:(void (^)(SSSnackbar *sender))actionBlock
+                 dismissalBlock:(void (^)(SSSnackbar *sender))dismissalBlock {
     if (self = [super initWithFrame:CGRectMake(0, 0, 0, 0)]) {
-        _actionHandler = actionBlock;
-        _dismissalHandler = dismissalBlock;
+        _actionBlock = actionBlock;
+        _dismissalBlock = dismissalBlock;
         _duration = duration;
         
         self.translatesAutoresizingMaskIntoConstraints = NO;
@@ -81,14 +80,6 @@ static SSSnackBar *currentlyVisibleSnackbar = nil;
     UIBezierPath *clippath = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:3];
     [clippath fill];
     CGContextRestoreGState(ctx);
-}
-
-- (CGFloat)cornerRadius {
-    return self.layer.cornerRadius;
-}
-
-- (void)setCornerRadius:(CGFloat)cornerRadius {
-    self.layer.cornerRadius = cornerRadius;
 }
 
 - (void)show {
@@ -143,7 +134,6 @@ static SSSnackBar *currentlyVisibleSnackbar = nil;
     [self _dismissCallingDismissalBlock:YES animated:YES];
 }
 - (void)_dismissCallingDismissalBlock:(BOOL)callDismissalBlock animated:(BOOL)animated {
-//    [[SSSnackBarManager sharedInstance] removeSnackbar:self];
     [self.superview removeConstraints:self.visibleVerticalLayoutConstraints];
     [self.superview addConstraints:self.hiddenVerticalLayoutConstraints];
     currentlyVisibleSnackbar = nil;
@@ -205,13 +195,13 @@ static SSSnackBar *currentlyVisibleSnackbar = nil;
 }
 
 - (void)executeDismissalBlock {
-    if (self.dismissalHandler)
-        self.dismissalHandler(self);
+    if (self.dismissalBlock)
+        self.dismissalBlock(self);
 }
 
 - (void)executeActionBlock {
-    if (self.actionHandler)
-        self.actionHandler(self);
+    if (self.actionBlock)
+        self.actionBlock(self);
 }
 
 - (NSArray *)hiddenVerticalLayoutConstraints {

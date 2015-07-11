@@ -7,7 +7,7 @@
 //
 
 #import "SSTableViewController.h"
-#import <SSSnackbar/SSSnackBar.h>
+#import <SSSnackbar/SSSnackbar.h>
 
 @interface SSTableViewController ()
 @property (strong, nonatomic) NSMutableArray *tableViewContents;
@@ -59,10 +59,10 @@
         [self.tableViewContents removeObjectAtIndex:row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         NSString *snackbarMessage = [NSString stringWithFormat:@"You removed %@.", self.lastRemovedElement];
-        SSSnackBar *snackbar = [[SSSnackBar alloc] initWithMessage:snackbarMessage
+        SSSnackbar *snackbar = [[SSSnackbar alloc] initWithMessage:snackbarMessage
                                                         actionText:@"Undo"
                                                           duration:5
-                                                       actionBlock:^(SSSnackBar *sender) {
+                                                       actionBlock:^(SSSnackbar *sender) {
                                                            [self.tableViewContents insertObject:self.lastRemovedElement
                                                                                         atIndex:self.lastRemovedIndex];
                                                            [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.lastRemovedIndex inSection:0]]
