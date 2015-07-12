@@ -14,9 +14,11 @@ Sam Stone, sam@samstonedev.com
 
 Snackbar's are useful for presenting a brief message to the user which they can then act on. A common usage pattern is to display a snackbar after a user has performed some destructive action, providing the user with a grace period during which they can undo this action.
 
-Indeed, this is the way in which snackbars are used in the iOS Google Gmail app:
+This use-case is demonstrated in the iOS Google Gmail app:
+![Gmail implementation](http://i.imgur.com/xnlQguQ.gif)
 
-Below are demonstrations of SSSnackBar:
+Below is a demonstration of the snackbar as realized by this project:
+![SSSnackbar implementation](http://i.imgur.com/9vJ8GOO.gif)
 
 ## Example Project
 The included example project provides a demonstration of SSSnackbar. It displays a tableView containing a shopping list. When an item is deleted from the shopping list, a snackbar is presented allowing the user to undo that deletion.
