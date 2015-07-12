@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SSSnackbar"
-  s.version          = "1.0.0"
+  s.version          = "0.1.0"
   s.summary          = "An iOS implementation of the Google Material Design's Snackbar UI element, as used extensively in Android as well as some Google iOS apps such as Gmail"
   s.description      = <<-DESC
                         A snackbar is a way to display an actionable alert to the user.
