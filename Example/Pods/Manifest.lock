@@ -1,7 +1,7 @@
 PODS:
   - Expecta (1.0.0)
   - Specta (1.0.2)
-  - SSSnackbar (0.1.0)
+  - SSSnackbar (1.0.0)
 
 DEPENDENCIES:
   - Expecta
@@ -15,6 +15,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Expecta: 32604574add2c46a36f8d2f716b6c5736eb75024
   Specta: 9cec98310dca411f7c7ffd6943552b501622abfe
-  SSSnackbar: 96fd5a96667a2412c9937ad2e5758d3f224502fc
+  SSSnackbar: d85f8e0dc4d4dbe92a5470c7f91e60fd7a74705c
 
 COCOAPODS: 0.37.2

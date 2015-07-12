@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "39B650A884678646EC48343F"
+               BlueprintIdentifier = "62AF68830ECC8995ED70131F"
                BuildableName = "SSSnackbar.bundle"
                BlueprintName = "Pods-SSSnackbar_Tests-SSSnackbar-SSSnackbar"
                ReferencedContainer = "container:Pods.xcodeproj">

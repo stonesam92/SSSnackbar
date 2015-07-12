@@ -1,1 +1,1 @@
-../../../../../Pod/Classes/SSSnackBar.h
+../../../../../Pod/Classes/SSSnackbar.h
