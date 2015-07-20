@@ -96,9 +96,18 @@
                                                    //must update the UI and dismiss the snackbar from main thread
                                                    //long running action blocks get run on background thread.
                                                    dispatch_sync(dispatch_get_main_queue(), ^{
+                                                       //must avoid trying to reinsert object out of the arrays bounds
+                                                       //which can happen if other objects have also been removed between this objects removal and replacement
+                                                       NSIndexPath *indexPathForInsertion;
+                                                       if (indexPath.row > self.longRunningExampleContents.count) {
+                                                           indexPathForInsertion = [NSIndexPath indexPathForRow:self.longRunningExampleContents.count
+                                                                                                      inSection:indexPath.section];
+                                                       } else {
+                                                           indexPathForInsertion = indexPath;
+                                                       }
                                                        [self.longRunningExampleContents insertObject:item
-                                                                                    atIndex:indexPath.row];
-                                                       [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                                                                    atIndex:indexPathForInsertion.row];
+                                                       [self.tableView insertRowsAtIndexPaths:@[indexPathForInsertion]
                                                                         withRowAnimation:UITableViewRowAnimationFade];
                                                    });
                                                }
