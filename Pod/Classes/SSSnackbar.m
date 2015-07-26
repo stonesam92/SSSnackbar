@@ -101,8 +101,13 @@ static SSSnackbar *currentlyVisibleSnackbar = nil;
 }
 
 - (void)show {
+    UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    while (topController.presentedViewController) {
+        topController = topController.presentedViewController;
+    }
     
-    UIView *superview = [UIApplication sharedApplication].delegate.window.rootViewController.view;
+    UIView *superview = topController.view;
+    
     BOOL shouldReplaceExistingSnackbar = currentlyVisibleSnackbar != nil;
     
     if (shouldReplaceExistingSnackbar) {
